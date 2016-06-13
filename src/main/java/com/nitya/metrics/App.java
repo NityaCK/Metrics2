@@ -159,7 +159,7 @@ public class App {    //USING GAUGE (multiple values)
 
         MetricRegistry metrics = new MetricRegistry();
 
-        metrics.register(name(App.class, "com.nitya.metrics"), new Gauge<Integer>() {
+        metrics.register(name(App.class, "wordcount"), new Gauge<Integer>() {
             public Integer getValue()
             {
                 int x=res;
