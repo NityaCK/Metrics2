@@ -1,64 +1,56 @@
 package com.nitya.metrics;
 
 import java.io.*;
-import java.util.concurrent.TimeUnit;
-import com.codahale.metrics.*;
-import static com.codahale.metrics.MetricRegistry.name;
 
-/*public class App   //USING COUNTER
-{
-    static final MetricRegistry metrics = new MetricRegistry();
-    static final JmxReporter reporter = JmxReporter.forRegistry(metrics).build();
-    private static final Counter words = metrics.counter(name(App.class, "words"));
-    static int wordCount(String s)
-    {
-        char ch[]= new char[s.length()];
-        int c=0;
-        for(int i=0;i<s.length();i++)
-        {
-            ch[i]= s.charAt(i);
-            if( ((i>0)&&(ch[i]!=' ')&&(ch[i-1]==' ')) || ((ch[0]!=' ')&&(i==0)) )
+public class App {
+    /* the app only modifies the value of the metric ; all other metric-related function happens via an object of ManageMetrics*/
+    static final String TEST = "com.nitya.metrics."; //package name
+    static int wordCount(String s) { //function to count number of words in a string
+        char ch[] = new char[s.length()];
+        int c = 0;
+        for (int i = 0; i < s.length(); i++) {
+            ch[i] = s.charAt(i);
+            if (((i > 0) && (ch[i] != ' ') && (ch[i - 1] == ' ')) || ((ch[0] != ' ') && (i == 0)))
                 c++;
         }
         return c;
     }
-    static void startReport()
-    {
-        ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)
-                .convertRatesTo(TimeUnit.SECONDS)
-                .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .build();
-        reporter.start(1, TimeUnit.SECONDS);
+    static int charCount(String S) { //function to count number of characters in a string
+        int c=0;
+        c=S.length();
+        return c;
     }
-    static void wait1Second()
-    {
+    static void waitSeconds(int n) { //function to slow down the change in the values of the counters so that updation is obvious & trackable
         try {
-            Thread.sleep(1000);
+            Thread.currentThread().sleep(n*1000);
         }
-        catch(InterruptedException e) {}
+        catch (InterruptedException ie) {
+            System.out.println("Interrupted exception");
+        }
     }
 
     public static void main( String[] args ) {
         String line = null;
-        int res = 0;
-
-        startReport();
-        reporter.start();
+        int w_res = 0,c_res=0;
 
         //String filename=args[0];
         String filename="test2.txt";
 
+        ManageMetrics.startReports();
+        System.out.println("TEST PRINT > " + App.class);
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             do {
-                    wait1Second();
+                waitSeconds(5);
                 line = reader.readLine();
                 if (line == null) break;
                 int x = wordCount(line);
-                res = res + x;
-                words.inc(x);
-                for(int i=0;i<15;i++)
-                    wait1Second();
+                w_res = w_res + x;
+                ManageMetrics.getManagedCounter(TEST + "words").inc(x);
+                int y = charCount(line);
+                c_res = c_res + y;
+                ManageMetrics.getManagedCounter("chars").inc(y);
             } while (line != null);
         } catch (FileNotFoundException f) {
             System.out.println("sorry file not found");
@@ -66,11 +58,9 @@ import static com.codahale.metrics.MetricRegistry.name;
             System.out.println("io exception");
         }
 
-        //System.out.println(res);
-        for(int i=0;i<6;i++)
-            wait1Second();
+            waitSeconds(5); //for final update to be visible
     }
-}*/
+}
 
 
 
@@ -101,12 +91,12 @@ import static com.codahale.metrics.MetricRegistry.name;
         reporter.start(1, TimeUnit.SECONDS);
     }
 
-    static void wait1Second()
+    static void waitSeconds(int n)
     {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
+        try
+        {
+            Thread.currentThread().sleep(n*1000);
+        } catch (InterruptedException e) { }
     }
 
     public static int countTheWords()
@@ -145,12 +135,11 @@ import static com.codahale.metrics.MetricRegistry.name;
             }
         });
 
-        for(int i=0;i<30;i++) wait1Second();
-        wait1Second();
+        waitSeconds(5);
     }
 }*/
 
-public class App {    //USING GAUGE (multiple values)
+/*public class App {    //USING GAUGE (multiple values)
 
     private static int res;
 
@@ -229,4 +218,4 @@ public class App {    //USING GAUGE (multiple values)
         } catch (InterruptedException e) { }
     }
 
-}
+}*/
