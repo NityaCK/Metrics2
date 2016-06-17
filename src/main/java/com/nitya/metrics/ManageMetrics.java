@@ -5,18 +5,12 @@ import java.util.concurrent.TimeUnit;
 import com.codahale.metrics.*;
 import static com.codahale.metrics.MetricRegistry.name;
 
-public class ManageMetrics
+public class ManageMetrics {
 /* class to instantiate + initialize + register + report all metrics -> only counters right now*/
-{
     static final MetricRegistry metrics = new MetricRegistry();
     static final JmxReporter jreporter = JmxReporter.forRegistry(metrics).build();
 
-    private static final Counter words = metrics.counter(name("com.nitya.metrics", "words"));
-    private static final Counter chars = metrics.counter(name("chars")); //first parameter is optional, only provides further levels of organization
-
-
-    static void startReports()
-    {
+    static void startReports() {
         ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
@@ -28,11 +22,19 @@ public class ManageMetrics
         SortedMap<String, Counter> tempMap = metrics.getCounters();
         return tempMap.get(metricName);
     }
-    static void performRegistration(String namespace, String metricName) { //next step > take type of metric also
-        metrics.counter(name(namespace,metricName));
+    static Counter getManagedCounter(String namespace, String metricName) {
+        return getManagedCounter(namespace+"."+metricName);
+    }/*overloaded function to include retrieval names that include namespaces*/
+
+    
+    //next step for following 2 functions > take type of metric also (use generic method to register)
+    static Counter performRegistration(String namespace, String metricName) {
+        return metrics.counter(name(namespace,metricName));
     }
-
-
+    static Counter performRegistration(String metricName) {
+        return metrics.counter(name(metricName));
+    } /*overloaded function to register Metric objects without namespaces.
+    first parameter in name() is optional, only provides further levels of organization*/
 }
 
 

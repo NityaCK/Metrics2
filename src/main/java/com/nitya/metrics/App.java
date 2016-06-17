@@ -4,7 +4,8 @@ import java.io.*;
 
 public class App {
     /* the app only modifies the value of the metric ; all other metric-related function happens via an object of ManageMetrics*/
-    static final String TEST = "com.nitya.metrics."; //package name
+    static final String NAMESPACE = "com.nitya.metrics";
+
     static int wordCount(String s) { //function to count number of words in a string
         char ch[] = new char[s.length()];
         int c = 0;
@@ -16,10 +17,9 @@ public class App {
         return c;
     }
     static int charCount(String S) { //function to count number of characters in a string
-        int c=0;
-        c=S.length();
-        return c;
+        return S.length();
     }
+
     static void waitSeconds(int n) { //function to slow down the change in the values of the counters so that updation is obvious & trackable
         try {
             Thread.currentThread().sleep(n*1000);
@@ -30,14 +30,14 @@ public class App {
     }
 
     public static void main( String[] args ) {
-        String line = null;
-        int w_res = 0,c_res=0;
-
+        String line;
         //String filename=args[0];
         String filename="test2.txt";
 
+        ManageMetrics.performRegistration(NAMESPACE, "words");
+        ManageMetrics.performRegistration("chars");
         ManageMetrics.startReports();
-        System.out.println("TEST PRINT > " + App.class);
+        //System.out.println("TEST PRINT > " + App.class); > gives the string 'com.nitya.metrics.App'
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -46,10 +46,8 @@ public class App {
                 line = reader.readLine();
                 if (line == null) break;
                 int x = wordCount(line);
-                w_res = w_res + x;
-                ManageMetrics.getManagedCounter(TEST + "words").inc(x);
+                ManageMetrics.getManagedCounter(NAMESPACE, "words").inc(x);
                 int y = charCount(line);
-                c_res = c_res + y;
                 ManageMetrics.getManagedCounter("chars").inc(y);
             } while (line != null);
         } catch (FileNotFoundException f) {
@@ -57,8 +55,6 @@ public class App {
         } catch (IOException io) {
             System.out.println("io exception");
         }
-
-            waitSeconds(5); //for final update to be visible
     }
 }
 
