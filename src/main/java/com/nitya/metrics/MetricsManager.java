@@ -16,7 +16,7 @@ public class MetricsManager {
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
-        reporter.start(1, TimeUnit.SECONDS);
+        reporter.start(2, TimeUnit.SECONDS);
         jreporter.start();
     }
 

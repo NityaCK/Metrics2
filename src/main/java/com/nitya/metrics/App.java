@@ -34,8 +34,8 @@ public class App {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileLoc));
             do {
-                //waitSeconds(5);
-                waitSeconds(2);
+                waitSeconds(5);
+                //waitSeconds(2);
                 line = reader.readLine();
                 if (line == null) break;
                 int x = wordCount(line);
