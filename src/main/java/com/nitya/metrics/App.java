@@ -8,7 +8,6 @@ public class App {
     static int charCount(String S) { //function to count number of characters in a string
         return S.length();
     }
-
     static void waitSeconds(int n) {
         try {
             Thread.currentThread().sleep(n*1000);
@@ -20,9 +19,12 @@ public class App {
 
     public static void main( String[] args ) {
         String line;
-        //String filename=args[0];
 
-        String fileLoc="/home/nitya/text files/test2.txt";
+        if (args.length != 1) {
+            System.out.println("Usage: java com.nitya.metrics.App <inputfilepath>");
+            System.exit(-1);
+        }
+        String fileLoc=args[0];
         Class c0 = new App().getClass();
         MetricsManager metricsManager = new MetricsManager();
         metricsManager.setNamespace(c0.getCanonicalName());
@@ -35,7 +37,6 @@ public class App {
             BufferedReader reader = new BufferedReader(new FileReader(fileLoc));
             do {
                 waitSeconds(5);
-                //waitSeconds(2);
                 line = reader.readLine();
                 if (line == null) break;
                 int x = wordCount(line);
