@@ -2,3 +2,5 @@ target
 .idea
 file-name-as-input.patch
 wordcountmetric.iml
+optional_reporting.patch
+optional_reporting_2.patch

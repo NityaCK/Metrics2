@@ -18,23 +18,24 @@ public class App {
     }
 
     public static void main( String[] args ) {
-        String line;
 
-        if (args.length != 1) {
-            System.out.println("Usage: java com.nitya.metrics.App <inputfilepath>");
+        if (args.length != 2) {
+            System.out.println("Usage: java com.nitya.metrics.App <inputfilepath> <reporting choice as jmx/console/both>");
             System.exit(-1);
         }
         String fileLoc=args[0];
+        String reportingChoice = args[1];
+        String line;
         Class c0 = new App().getClass();
         MetricsManager metricsManager = new MetricsManager();
         metricsManager.setNamespace(c0.getCanonicalName());
 
         metricsManager.performRegistration("words");
         metricsManager.performRegistration("chars");
-        metricsManager.startReports();
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileLoc));
+            metricsManager.startReports(reportingChoice);
             do {
                 waitSeconds(5);
                 line = reader.readLine();
@@ -44,10 +45,13 @@ public class App {
                 int y = charCount(line);
                 metricsManager.getManagedCounter("chars").inc(y);
             } while (line != null);
-        } catch (FileNotFoundException f) {
-            System.out.println(f.getMessage());
+        } catch (FileNotFoundException fnf) {
+            System.out.println(fnf.getMessage());
         } catch (IOException io) {
             System.out.println(io.getMessage());
+        } catch (IllegalArgumentException ia) {
+            System.out.println("Usage: java com.nitya.metrics.App <inputfilepath> <reporting choice as jmx/console/both>");
+            System.out.println(ia.getMessage());
         }
     }
 }

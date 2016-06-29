@@ -8,15 +8,32 @@ import static com.codahale.metrics.MetricRegistry.name;
 public class MetricsManager {
 
     static final MetricRegistry metrics = new MetricRegistry();
-    static final JmxReporter jreporter = JmxReporter.forRegistry(metrics).build();
     String namespace;
 
-    void startReports() {
+    void startReports(String choice) {
+        if (choice.equals("console"))
+            startConsoleReporter();
+        else if (choice.equals("jmx"))
+            startJmxReporter();
+        else if(choice.equals("both")) {
+            startConsoleReporter();
+            startJmxReporter();
+        }
+        else {
+            throw new IllegalArgumentException("Invalid 2nd argument");
+        }
+    }
+
+    void startConsoleReporter() {
         ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
         reporter.start(2, TimeUnit.SECONDS);
+    }
+
+    void startJmxReporter() {
+        JmxReporter jreporter = JmxReporter.forRegistry(metrics).build();
         jreporter.start();
     }
 
