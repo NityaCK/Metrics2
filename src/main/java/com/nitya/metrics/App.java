@@ -16,11 +16,14 @@ public class App {
             System.out.println(ie.getMessage());
         }
     }
+    static void printUsage() {
+        System.out.println("Usage: java com.nitya.metrics.App <inputfilepath> <reporting choice as jmx/console/both>");
+    }
 
     public static void main( String[] args ) {
 
         if (args.length != 2) {
-            System.out.println("Usage: java com.nitya.metrics.App <inputfilepath> <reporting choice as jmx/console/both>");
+            printUsage();
             System.exit(-1);
         }
         String fileLoc=args[0];
@@ -50,7 +53,7 @@ public class App {
         } catch (IOException io) {
             System.out.println(io.getMessage());
         } catch (IllegalArgumentException ia) {
-            System.out.println("Usage: java com.nitya.metrics.App <inputfilepath> <reporting choice as jmx/console/both>");
+            printUsage();
             System.out.println(ia.getMessage());
         }
     }

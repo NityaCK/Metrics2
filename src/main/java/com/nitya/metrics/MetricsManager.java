@@ -11,12 +11,10 @@ public class MetricsManager {
     String namespace;
 
     void startReports(String choice) {
-        if (choice.equals("console"))
+        if (choice.equals("console") || choice.equals("both"))
             startConsoleReporter();
-        else if (choice.equals("jmx"))
-            startJmxReporter();
-        else if(choice.equals("both")) {
-            startConsoleReporter();
+        }
+        if (choice.equals("jmx") || choice.equals ("both")) {
             startJmxReporter();
         }
         else {
