@@ -11,13 +11,16 @@ public class MetricsManager {
     String namespace;
 
     void startReports(String choice) {
-        if (choice.equals("console") || choice.equals("both"))
+        boolean start=false;
+        if (choice.equals("console") || choice.equals("both")){
             startConsoleReporter();
+            start=true;
         }
         if (choice.equals("jmx") || choice.equals ("both")) {
             startJmxReporter();
+            start=true;
         }
-        else {
+        if (!start) {
             throw new IllegalArgumentException("Invalid 2nd argument");
         }
     }
